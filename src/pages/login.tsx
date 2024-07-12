@@ -1,30 +1,33 @@
-import Header from '@/components/Header';
-import { Inter } from 'next/font/google';
-
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { Inter } from 'next/font/google';
+import useAuthenticate from '../hooks/useAuthenticate';
+import useSession from '../hooks/useSession';
 import { ORIGIN, signInWithGoogle } from '../utils/lit';
-import { AuthMethodType } from '@lit-protocol/constants';
+import Loading from '../components/Loading';
+import AccountSelection from '../components/AccountSelection';
 import useAccounts from '@/hooks/useAccount';
-import useAuthenticate from '@/hooks/useAuthenticate';
-import useSession from '@/hooks/useSession';
-import Loading from '@/components/Loading';
-import SignUpMethods from '@/components/SignUpMethods';
+import LoginMethods from '@/components/LoginMethods';
+import CreateAccount from '@/components/CreateAccount';
+import Header from '@/components/Header';
 import UniswapBox from '@/components/UniswapBox';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function Home() {
-  const redirectUri = ORIGIN;
+export default function LoginView() {
+  const redirectUri = ORIGIN + '/login';
 
   const {
     authMethod,
     loading: authLoading,
     error: authError,
   } = useAuthenticate(redirectUri);
+
   const {
-    createAccount,
+    fetchAccounts,
+    setCurrentAccount,
     currentAccount,
+    accounts,
     loading: accountsLoading,
     error: accountsError,
   } = useAccounts();
@@ -42,12 +45,16 @@ export default function Home() {
     await signInWithGoogle(redirectUri);
   }
 
+  function goToSignUp() {
+    router.push('/');
+  }
+
   useEffect(() => {
-    if (authMethod && authMethod.authMethodType === AuthMethodType.Google) {
+    if (authMethod) {
       router.replace(window.location.pathname, undefined, { shallow: true });
-      createAccount(authMethod);
+      fetchAccounts(authMethod);
     }
-  }, [authMethod, createAccount]);
+  }, [authMethod, fetchAccounts]);
 
   useEffect(() => {
     if (authMethod && currentAccount) {
@@ -62,11 +69,39 @@ export default function Home() {
   }
 
   if (accountsLoading) {
-    return <Loading copy={'Creating your account...'} error={error} />;
+    return <Loading copy={'Looking up your accounts...'} error={error} />;
   }
 
   if (sessionLoading) {
     return <Loading copy={'Securing your session...'} error={error} />;
+  }
+
+  if (currentAccount && sessionSigs) {
+    return <div>Uniswap</div>;
+  }
+
+  if (authMethod && accounts.length > 0) {
+    return (
+      <AccountSelection
+        accounts={accounts}
+        setCurrentAccount={setCurrentAccount}
+        error={error}
+      />
+    );
+  }
+
+  if (authMethod && accounts.length === 0) {
+    return (
+      <main
+        className={`flex min-h-screen flex-col items-center justify-center p-24 ${inter.className}`}
+      >
+        <div className="z-10 max-w-5xl w-full items-center justify-center font-mono text-sm flex">
+          <div className="text-white bg-gray-800 p-6 rounded-xl">
+            <CreateAccount signUp={goToSignUp} error={error} />
+          </div>
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -80,9 +115,9 @@ export default function Home() {
             <UniswapBox />
           ) : (
             <div className="text-white bg-gray-800 p-6 rounded-xl">
-              <SignUpMethods
+              <LoginMethods
                 handleGoogleLogin={handleGoogleLogin}
-                goToLogin={() => router.push('/login')}
+                signUp={goToSignUp}
                 error={error}
               />
             </div>

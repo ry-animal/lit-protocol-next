@@ -12,6 +12,12 @@ import {
   SessionSigs,
 } from '@lit-protocol/types';
 
+export const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN || 'localhost';
+export const ORIGIN =
+  process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+    ? `https://${DOMAIN}`
+    : `http://${DOMAIN}:3000`;
+
 export const litNodeClient: LitNodeClient = new LitNodeClient({
   alertWhenUnauthorized: false,
   litNetwork: 'datil-dev',
