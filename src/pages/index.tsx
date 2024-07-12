@@ -58,6 +58,7 @@ export default function Home() {
       console.log('authMethod: ', authMethod);
       createAccount(authMethod);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authMethod, createAccount]);
 
   useEffect(() => {
