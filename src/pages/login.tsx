@@ -11,6 +11,7 @@ import LoginMethods from '@/components/LoginMethods';
 import CreateAccount from '@/components/CreateAccount';
 import Header from '@/components/Header';
 import LimitOrder from '@/components/LimitOrder';
+import { loadingCopyMap, LoadingState } from '.';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -104,6 +105,14 @@ export default function LoginView() {
     );
   }
 
+  const currentLoadingState: LoadingState = authLoading
+    ? 'auth'
+    : accountsLoading
+      ? 'accounts'
+      : sessionLoading
+        ? 'session'
+        : null;
+
   return (
     <>
       <Header />
@@ -111,7 +120,9 @@ export default function LoginView() {
         className={`flex min-h-screen flex-col items-center justify-center p-24 ${inter.className} bg-gray-900 bg-opacity-25`}
       >
         <div className="z-10 max-w-5xl w-full items-center justify-center font-mono text-sm flex">
-          {currentAccount && sessionSigs ? (
+          {currentLoadingState ? (
+            <Loading copy={loadingCopyMap[currentLoadingState]} error={error} />
+          ) : currentAccount && sessionSigs ? (
             <LimitOrder />
           ) : (
             <div className="text-white bg-gray-800 p-6 rounded-xl">

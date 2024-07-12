@@ -164,7 +164,7 @@ export const executeOrder = async (
         sessionKey: params.sessionKey,
         authMethods: [
           {
-            authMethodType: 6, // Google OAuth
+            authMethodType: 6,
             accessToken: googleCredential,
           },
         ],

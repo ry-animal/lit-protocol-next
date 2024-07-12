@@ -1,5 +1,6 @@
 import { executeOrder } from '@/uniswap/interface';
 import React, { useState } from 'react';
+import { ethers } from 'ethers';
 
 const LimitOrder: React.FC = () => {
   const [orders, setOrders] = useState([]);
@@ -34,9 +35,14 @@ const LimitOrder: React.FC = () => {
     }
   };
 
+  const ETH = ethers.constants.AddressZero;
+  const WETH = '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14';
+
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Limit Order</h2>
+      <h3 className="text-lg font-bold">ETH: {ETH}</h3>
+      <h3 className="text-lg font-bold">WETH: {WETH}</h3>
       <form onSubmit={handleCreateOrder} className="space-y-2">
         <input
           name="tokenIn"

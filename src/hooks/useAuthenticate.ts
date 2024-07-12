@@ -26,7 +26,7 @@ export default function useAuthenticate(redirectUri?: string) {
       if (err instanceof Error) {
         setError(err);
       } else {
-        setError(new Error('An unknown error occurred'));
+        setError(new Error('unknown error in authWithGoogle'));
       }
     } finally {
       setLoading(false);

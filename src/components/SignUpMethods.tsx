@@ -26,11 +26,10 @@ export default function SignUpMethods({
         )}
         {view === 'default' && (
           <>
-            <h1 className="text-3xl font-bold mb-2 text-white">Get started</h1>
+            <h1 className="text-3xl font-bold mb-2 text-white">Sign Up</h1>
             <p className="text-base leading-6">
-              Create a wallet that is secured by accounts you already have. With
-              Lit-powered programmable MPC wallets, you won&apos;t have to worry
-              about seed phrases.
+              Create a wallet using Google Auth with Lit-powered programmable
+              MPC wallets.
             </p>
             <AuthMethods
               handleGoogleLogin={handleGoogleLogin}

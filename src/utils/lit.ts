@@ -104,6 +104,11 @@ export async function mintPKP(authMethod: AuthMethod): Promise<IRelayPKP> {
     txHash || ''
   );
 
+  console.log('mintPKP provider', provider);
+  console.log('mintPKP options', options);
+  console.log('mintPKP txHash: ', txHash);
+  console.log('mintPKP response: ', response);
+
   if (
     response?.status !== 'Succeeded' ||
     !response.pkpTokenId ||
@@ -123,7 +128,7 @@ export async function mintPKP(authMethod: AuthMethod): Promise<IRelayPKP> {
 
 function getProviderByAuthMethod(authMethod: AuthMethod) {
   switch (authMethod.authMethodType) {
-    case AuthMethodType.GoogleJwt:
+    case AuthMethodType.Google:
       return litAuthClient.getProvider(ProviderType.Google);
     default:
       return;

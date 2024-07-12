@@ -42,7 +42,7 @@ export default function useSession() {
         if (err instanceof Error) {
           setError(err);
         } else {
-          setError(new Error('An unknown error occurred'));
+          setError(new Error('an unknown error in initSession'));
         }
       } finally {
         setLoading(false);

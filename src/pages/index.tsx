@@ -14,6 +14,13 @@ import LimitOrder from '@/components/LimitOrder';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export type LoadingState = 'auth' | 'accounts' | 'session' | null;
+export const loadingCopyMap: Record<NonNullable<LoadingState>, string> = {
+  auth: 'Authenticating your credentials...',
+  accounts: 'Creating your account...',
+  session: 'Securing your session...',
+};
+
 export default function Home() {
   const redirectUri = ORIGIN;
 
@@ -22,18 +29,21 @@ export default function Home() {
     loading: authLoading,
     error: authError,
   } = useAuthenticate(redirectUri);
+
   const {
     createAccount,
     currentAccount,
     loading: accountsLoading,
     error: accountsError,
   } = useAccounts();
+
   const {
     initSession,
     sessionSigs,
     loading: sessionLoading,
     error: sessionError,
   } = useSession();
+
   const router = useRouter();
 
   const error = authError || accountsError || sessionError;
@@ -43,8 +53,9 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (authMethod && authMethod.authMethodType === AuthMethodType.Google) {
+    if (authMethod && authMethod.authMethodType !== AuthMethodType.WebAuthn) {
       router.replace(window.location.pathname, undefined, { shallow: true });
+      console.log('authMethod: ', authMethod);
       createAccount(authMethod);
     }
   }, [authMethod, createAccount]);
@@ -55,19 +66,16 @@ export default function Home() {
     }
   }, [authMethod, currentAccount, initSession]);
 
-  if (authLoading) {
-    return (
-      <Loading copy={'Authenticating your credentials...'} error={error} />
-    );
-  }
+  const currentLoadingState: LoadingState = authLoading
+    ? 'auth'
+    : accountsLoading
+      ? 'accounts'
+      : sessionLoading
+        ? 'session'
+        : null;
 
-  if (accountsLoading) {
-    return <Loading copy={'Creating your account...'} error={error} />;
-  }
-
-  if (sessionLoading) {
-    return <Loading copy={'Securing your session...'} error={error} />;
-  }
+  console.log('currentAccount: ', currentAccount);
+  console.log('sessionSigs: ', sessionSigs);
 
   return (
     <>
@@ -76,7 +84,9 @@ export default function Home() {
         className={`flex min-h-screen flex-col items-center justify-center p-24 ${inter.className} bg-gray-900 bg-opacity-25`}
       >
         <div className="z-10 max-w-5xl w-full items-center justify-center font-mono text-sm flex">
-          {currentAccount && sessionSigs ? (
+          {currentLoadingState ? (
+            <Loading copy={loadingCopyMap[currentLoadingState]} error={error} />
+          ) : currentAccount && sessionSigs ? (
             <LimitOrder />
           ) : (
             <div className="text-white bg-gray-800 p-6 rounded-xl">
