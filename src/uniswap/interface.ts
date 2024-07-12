@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ethers } from 'ethers';
 import { LitNodeClient } from '@lit-protocol/lit-node-client';
 import {
@@ -6,7 +7,9 @@ import {
   AuthSig,
   GetSessionSigsProps,
   LitResourcePrefix,
+  SignSessionKeyResponse,
 } from '@lit-protocol/types';
+// import { usePKP } from '@/hooks/usePKP';
 
 const FACTORY_ADDRESS = '0x1F98431c8aD98523631AE4a59f267346ea31F984';
 const SWAP_ROUTER_ADDRESS = '0xE592427A0AEce92De3Edee1F18E0157C05861564';
@@ -85,13 +88,17 @@ export const litNodeClient: LitNodeClient = new LitNodeClient({
   debug: true,
 });
 
-export const executeOrder = async (encryptedOrder: string, pkp: string) => {
+export const executeOrder = async (
+  encryptedOrder: string,
+  googleCredential: string
+) => {
+  const pkp = ''; // usePKP();
   await litNodeClient.connect();
 
   const sessionKey = litNodeClient.getSessionKey();
 
   if (!sessionKey) {
-    throw new Error('session key not found');
+    throw new Error('no session key found');
   }
 
   const litActionCode = `
@@ -151,9 +158,30 @@ export const executeOrder = async (encryptedOrder: string, pkp: string) => {
     resourcePrefix: LitResourcePrefix.LitAction,
   };
 
-  const authNeededCallback = async (): Promise<AuthSig> => {
-    // TODO
-    throw new Error('authNeededCallback not implemented');
+  const authNeededCallback = async (params: any): Promise<AuthSig> => {
+    const sessionSigResponse: SignSessionKeyResponse =
+      await litNodeClient.signSessionKey({
+        sessionKey: params.sessionKey,
+        authMethods: [
+          {
+            authMethodType: 6, // Google OAuth
+            accessToken: googleCredential,
+          },
+        ],
+        pkpPublicKey: pkp,
+        expiration: params.expiration,
+        resources: params.resources,
+        chainId: 11155111,
+      });
+
+    const authSig: AuthSig = {
+      sig: sessionSigResponse.authSig.sig,
+      derivedVia: sessionSigResponse.authSig.derivedVia,
+      signedMessage: sessionSigResponse.authSig.signedMessage,
+      address: sessionSigResponse.authSig.address,
+    };
+
+    return authSig;
   };
 
   const sessionSigs = await litNodeClient.getSessionSigs({
