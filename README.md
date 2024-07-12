@@ -59,93 +59,66 @@ https://docs.defined.fi/reference/getnetworks — pricing api for ethereum sepol
 
 ## Q1
 
-\_isBalanceWithinThreshold(uint256 balance):
-Check if a given balance is within the threshold limit and it calculates a lower bound based on totalStakedAssets and rebalanceThreshold. Returns true if the balance >= lower bound.
+desc:
 
-\_updateBalance():
-Updates the totalAssets of the contract by fetching the balance of the stablecoin for the contract's address.
+- \_isBalanceWithinThreshold(uint256 balance):
+  check if balance is within the threshold limit and calculate a lower bound based on totalStakedAssets and rebalanceThreshold. Returns true if the balance >= lower bound.
 
-\_updateStakedBalance(uint256 amount, uint256 add):
-Updates the totalStakedAssets and if add is 1 adds the amount to totalStakedAssets else it subtracts the amount.
+- \_updateBalance():
+  updates the totalAssets of the contract by fetching the balance of the stablecoin for the contract's address.
 
-\_updateAvailableAssets():
-Updates the availableAssets and minAssetBalance based on the current totalAssets, totalStakedAssets, and rebalanceThreshold then calculates liquidity and updates availableAssets
+- \_updateStakedBalance(uint256 amount, uint256 add):
+  updates the totalStakedAssets and if add is 1 adds the amount to totalStakedAssets else it subtracts the amount.
 
-Order -
-\_updateBalance() : updated for new deposits
-\_updateStakedBalance(amount, 1) : increase new staked amt
-\_updateAvailableAssets() : recalculated based on total and staked balances
+- \_updateAvailableAssets():
+  updates the availableAssets and minAssetBalance based on the current totalAssets, totalStakedAssets, and rebalanceThreshold then calculates liquidity and updates availableAssets
+
+order:
+
+- \_updateBalance() : updated for new deposits
+- \_updateStakedBalance(amount, 1) : increase new staked amt
+- \_updateAvailableAssets() : recalculated based on total and staked balances
 
 ## Q2
 
-Conditions for a potential attack:
+potential attack:
 
-- The attacker needs to have permission to call the aggregate() function.
+- needs permission to call aggregate()
 - The contract should not have proper access controls or validation on the targets and data parameters.
 
-Potential attack scenario:
-An attacker could use this function to execute arbitrary calls to any contract address, potentially including:
+attack scenario:
 
-- Calling sensitive functions on other contracts.
-- Transferring tokens or ETH from the contract to the attacker's address.
-- Manipulating state variables in other contracts.
-- Performing flash loan attacks by batching multiple operations.
+- attacker could use this function to call other contract address
+  - calling sensitive functions on other contracts
+  - xfer assets from the contract to the attacker's address
 
-Types of funds at risk:
+funds at risk:
 
-- Any ETH stored in the contract.
-- Any ERC20 tokens that the contract has approval to spend.
-- Any assets controlled by contracts that this contract has permission to interact with.
+- eth in the contract
+- assets that contract has permission to interact with
 
-To mitigate these risks, it's crucial to implement strict access controls, validate target addresses,
-and carefully review the data being passed to this function.
-Additionally, using a whitelist of allowed target addresses and function signatures could significantly reduce
-the attack surface.
+risk mitigation:
+
+- access controls
+- whitelist of allowed target addresses
 
 ## Q3
 
-Permit2, developed by Uniswap, offers several improvements over traditional ERC20 allowances. Let's break down its features, benefits, and potential risks:
+### Permit2
 
-Differences from normal ERC20 allowances:
+pros:
 
-1. Signature-based approvals: Permit2 uses EIP-712 signatures for approvals, allowing users to grant permissions without an on-chain transaction.
+- gasless sigs for every token
+- expiration date
+- batching approvals and xfers in one tx
+- can be used for multiple tokens allowance
+- better ux experience
 
-2. Time-bound permissions: Approvals can have expiration times, limiting the window of vulnerability.
+cons:
 
-3. Allowance management: Users can set specific allowance amounts for different spenders and tokens in a single operation.
-
-4. Batched operations: Permit2 enables combining multiple token approvals and transfers in a single transaction.
-
-Usefulness in multi-step transactions:
-
-1. Gas efficiency: By batching operations, it reduces the number of separate transactions needed for complex operations.
-
-2. Improved UX: Users can approve and execute multi-step operations in a single transaction, streamlining the process.
-
-3. Flexibility: It allows for more complex and customized token interaction patterns without multiple approval steps.
-
-Why Permit2 is "safer" than regular allowances:
-
-1. Time-limited approvals: Reduces the risk window compared to indefinite traditional allowances.
-
-2. Granular control: Users can set specific allowances for different spenders and tokens, minimizing exposure.
-
-3. No need for "infinite" approvals: Users don't need to set unnecessarily high allowances for protocols to function.
-
-4. Signature-based: Approvals can be granted off-chain, reducing on-chain footprint and potential attack surface.
-
-Potential risks with Permit2:
-
-1. Signature reuse: If signatures are not properly invalidated after use, they could potentially be reused.
-
-2. Phishing attacks: Users might be tricked into signing malicious permissions.
-
-3. Smart contract vulnerabilities: As with any smart contract, undiscovered bugs could lead to exploits.
-
-4. Centralization risk: Reliance on a single contract (Permit2) could create a central point of failure if compromised.
-
-5. User error: Complex permissions might confuse users, leading to unintended approvals.
-
-6. Front-running: In some scenarios, signed permissions could be front-run before their intended use.
-
-While Permit2 offers significant improvements in safety and flexibility over traditional ERC20 allowances, users and developers should remain vigilant and understand the system thoroughly to mitigate potential risks.
+- not backwards compatible
+- not all wallets support it
+- not all contracts support it
+- since it can approval multiple tokens, it can be a security risk
+- unlimited approval (pro or con)
+- centralized contract risk for Permit2

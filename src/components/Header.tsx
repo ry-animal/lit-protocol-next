@@ -27,9 +27,9 @@ const Header: React.FC = () => {
     <header className="bg-gray-800 text-white font-mono">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
-          <div className="flex gap-3 text-xl font-bold">
+          <div className="flex gap-4 text-xl font-bold">
             <Image src="/lit.svg" alt="Lit Swap" width={40} height={40} />
-            Genius Swap
+            Genius Limit Order
           </div>
           <nav className="flex space-x-4 md:gap-10">
             {navItems.map((item) =>

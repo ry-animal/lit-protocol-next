@@ -86,7 +86,7 @@ export async function getPKPs(authMethod: AuthMethod): Promise<IRelayPKP[]> {
   const allPKPs = await provider?.fetchPKPsThroughRelayer(authMethod);
 
   if (!allPKPs) {
-    throw new Error('Failed to fetch PKPs');
+    throw new Error('failed fetchPKPsThroughRelayer');
   }
 
   return allPKPs;

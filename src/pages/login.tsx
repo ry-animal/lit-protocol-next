@@ -10,7 +10,7 @@ import useAccounts from '@/hooks/useAccount';
 import LoginMethods from '@/components/LoginMethods';
 import CreateAccount from '@/components/CreateAccount';
 import Header from '@/components/Header';
-import UniswapBox from '@/components/UniswapBox';
+import LimitOrder from '@/components/LimitOrder';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -93,7 +93,7 @@ export default function LoginView() {
   if (authMethod && accounts.length === 0) {
     return (
       <main
-        className={`flex min-h-screen flex-col items-center justify-center p-24 ${inter.className}`}
+        className={`flex min-h-screen flex-col items-center justify-center p-24 ${inter.className} bg-gray-900 bg-opacity-25`}
       >
         <div className="z-10 max-w-5xl w-full items-center justify-center font-mono text-sm flex">
           <div className="text-white bg-gray-800 p-6 rounded-xl">
@@ -108,11 +108,11 @@ export default function LoginView() {
     <>
       <Header />
       <main
-        className={`flex min-h-screen flex-col items-center justify-center p-24 ${inter.className}`}
+        className={`flex min-h-screen flex-col items-center justify-center p-24 ${inter.className} bg-gray-900 bg-opacity-25`}
       >
         <div className="z-10 max-w-5xl w-full items-center justify-center font-mono text-sm flex">
           {currentAccount && sessionSigs ? (
-            <UniswapBox />
+            <LimitOrder />
           ) : (
             <div className="text-white bg-gray-800 p-6 rounded-xl">
               <LoginMethods

@@ -1055,6 +1055,18 @@
     cross-fetch "3.1.4"
     tslib "1.14.1"
 
+"@lit-protocol/types@^6.1.1":
+  version "6.1.1"
+  resolved "https://registry.npmjs.org/@lit-protocol/types/-/types-6.1.1.tgz"
+  integrity sha512-Yc5Tn/9idY/KJs+pow4LeJOEbVNTVGU/rLEiqIwScdtwKIzuGTAaxtQskSVzzz4NLTK/JJp3fSBh2G8MPpoWAg==
+  dependencies:
+    "@ethersproject/abstract-provider" "5.7.0"
+    "@lit-protocol/accs-schemas" "0.0.7"
+    ethers "^5.7.1"
+    jszip "^3.10.1"
+    siwe "^2.0.5"
+    tslib "1.14.1"
+
 "@lit-protocol/types@6.1.0":
   version "6.1.0"
   resolved "https://registry.npmjs.org/@lit-protocol/types/-/types-6.1.0.tgz"
