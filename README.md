@@ -1,21 +1,14 @@
 # lit-protocol-next
 
-## Genius Interview - Mini Project
-
-At our core, looking for someone who takes pride in their ideas and defends them, a critical thinker to shape architecture, design, and product decisions, and loves to ship code, move fast, and hustle with the team!
-
 ## Goal
 
 1. Leveraging Lit Protocol, NextJs/React to build a mini-full-stack application
    1. Can use any styling libraries, Tailwind is preferred
-2. Your questions/thoughts/concerns on the current Genius Architecture + understanding of Solidity
 
 ## Measurement
 
 1. How fast you can pick up and leverage new tech (Lit) that is not necessarily the best documented
 2. Code style/structure/maintainability
-3. Thought process + architect a project with a many moving pieces
-4. Critical thought on Genius’ current architecture / general understanding of Solidity
 
 //Not particularly concerned on nitty, gritty styling etc, so you don’t need to spend too much time there. Functionality is much more important. Definitely feel free to use a library like ShadCN.
 
@@ -35,7 +28,6 @@ At our core, looking for someone who takes pride in their ideas and defends them
 4. You can feel free to define your data types, UI, etc. any way you like (to keep things simple you can base all limit orders on ETH / WETH pairs.
 5. No need to set up a DB, can just save everything in localstorage for the scope of the demo
 6. Aim to finish in no more than 2 days. (Candidly this may be a lot larger scope than 2 days, so if you’re not all the way through - just send in what you have and can walk through the code together)
-7. You will be compensated $300 for the task.
 
 Helpful Utilities
 
@@ -47,7 +39,7 @@ https://ui.shadcn.com/ - ui components
 
 https://tailwindcss.com/docs/installation - tailwind
 
-https://docs.defined.fi/reference/getnetworks — pricing api for ethereum sepolia + tokens etc. (lmk if you need an api key)
+https://docs.defined.fi/reference/getnetworks — pricing api for ethereum sepolia + tokens etc.
 
 ## Solidity Notes
 
